@@ -10,7 +10,7 @@ namespace ConsoleTestBed
         static void Main(string[] args)
         {
             Console.WriteLine("=============================");
-            Console.WriteLine("DRPDecrypter v0.8");
+            Console.WriteLine("DRPDecrypter v0.8_h1");
             Console.WriteLine("Copyright(c) 2016 Sammi Husky");
             Console.WriteLine("Licensed under MIT License");
             Console.WriteLine("=============================\n");
