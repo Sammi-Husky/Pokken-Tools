@@ -35,17 +35,29 @@ namespace DRPExtractor
                         var name = reader.ReadTerminatedString();
                         stream.Position = BaseAddr + 0x44;
                         var next = reader.ReadInt32().Reverse();
+                        stream.Position = BaseAddr + 0x4A;
+                        var count = reader.ReadInt16().Reverse();
                         stream.Position = BaseAddr + 0x50;
-                        var size = reader.ReadInt32().Reverse();
-                        stream.Position = BaseAddr + 0x66;
+                        var sizes = new int[count];
+                        for (int i = 0; i < count; i++)
+                            sizes[i] = reader.ReadInt32().Reverse();
 
-                        using (var originStream = new MemoryStream(reader.ReadBytes(size)))
+                        stream.Position = BaseAddr + 0x60;
+                        for (int i = 0; i < count; i++)
                         {
-                            using (var destStream = File.Create(Path.Combine(args[0].Remove(args[0].IndexOf('.')), name)))
+                            var newname = name;
+                            if (count > 1)
+                                newname += $"[{i}]";
+
+                            stream.Seek(0x06, SeekOrigin.Current);
+                            using (var originStream = new MemoryStream(reader.ReadBytes(sizes[i] - 6)))
                             {
-                                using (var decompStream = new DeflateStream(originStream, CompressionMode.Decompress))
+                                using (var destStream = File.Create(Path.Combine(args[0].Remove(args[0].IndexOf('.')), newname)))
                                 {
-                                    decompStream.CopyTo(destStream);
+                                    using (var decompStream = new DeflateStream(originStream, CompressionMode.Decompress))
+                                    {
+                                        decompStream.CopyTo(destStream);
+                                    }
                                 }
                             }
                         }

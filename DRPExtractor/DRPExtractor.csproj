@@ -48,6 +48,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Type Extensions\BinaryReaderExtension.cs" />
+    <Compile Include="Type Extensions\Int16Extension.cs" />
     <Compile Include="Type Extensions\Int32Extension.cs" />
     <Compile Include="Type Extensions\RoundingExtensions.cs" />
   </ItemGroup>
