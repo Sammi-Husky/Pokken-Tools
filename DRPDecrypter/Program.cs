@@ -10,7 +10,7 @@ namespace ConsoleTestBed
         static void Main(string[] args)
         {
             Console.WriteLine("=============================");
-            Console.WriteLine("DRPDecrypter");
+            Console.WriteLine("DRPDecrypter v0.8");
             Console.WriteLine("Copyright(c) 2016 Sammi Husky");
             Console.WriteLine("Licensed under MIT License");
             Console.WriteLine("=============================\n");
@@ -54,7 +54,11 @@ namespace ConsoleTestBed
                         {
                             for (int x = 0; x < 8; x++)
                             {
-                                filedata[x + (i * 8)] = DecryptWord(reader.ReadInt32().Reverse(), ref xorval);
+                                var randInt = _rand.GetInt();
+                                var XOR = reader.ReadInt32().Reverse() ^ randInt;
+                                var val = XOR ^ xorval;
+                                xorval = (randInt << 13) & unchecked((int)0x80000000);
+                                filedata[x + (i * 8)] = val.Reverse();
                             }
                         }
                     #endregion
@@ -67,7 +71,11 @@ namespace ConsoleTestBed
 
                     for (int i = 0; i < (words & 7); i++)
                     {
-                        filedata[offset / 4 + i] = DecryptWord(reader.ReadInt32().Reverse(), ref xorval);
+                        var randInt = _rand.GetInt();
+                        var XOR = reader.ReadInt32().Reverse() ^ randInt;
+                        var val = XOR ^ xorval;
+                        xorval = (randInt << 13) & unchecked((int)0x80000000);
+                        filedata[offset / 4 + i] = val.Reverse();
                     }
                     goto loops_end;
                     #endregion
@@ -93,14 +101,6 @@ namespace ConsoleTestBed
             byte[] result = new byte[filedata.Length * sizeof(int)];
             Buffer.BlockCopy(filedata, 0, result, 0, result.Length);
             return result;
-        }
-        public static int DecryptWord(int word, ref int xorval)
-        {
-            var randInt = _rand.GetInt();
-            var XOR = word ^ randInt;
-            var val = XOR ^ xorval;
-            xorval = (randInt << 13) & unchecked((int)0x80000000);
-            return (XOR ^ xorval).Reverse();
         }
     }
     public class RandomXS
