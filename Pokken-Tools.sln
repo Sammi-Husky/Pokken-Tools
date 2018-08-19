@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRPDecrypter", "DRPDecrypter\DRPDecrypter.csproj", "{188CBA23-7191-4812-9BD4-07776661E6D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRPExtractor", "DRPExtractor\DRPExtractor.csproj", "{1C696A62-F209-4914-B640-259B3D0E20CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRPExplorer", "DRPExplorer\DRPExplorer.csproj", "{483962F9-8A32-4DED-9B6B-FC5FFDA802DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRPRepacker", "DRPRepacker\DRPRepacker.csproj", "{26999F57-B843-421A-BD7B-C90B8F15811A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +25,19 @@ Global
 		{1C696A62-F209-4914-B640-259B3D0E20CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C696A62-F209-4914-B640-259B3D0E20CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C696A62-F209-4914-B640-259B3D0E20CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{483962F9-8A32-4DED-9B6B-FC5FFDA802DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{483962F9-8A32-4DED-9B6B-FC5FFDA802DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{483962F9-8A32-4DED-9B6B-FC5FFDA802DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{483962F9-8A32-4DED-9B6B-FC5FFDA802DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26999F57-B843-421A-BD7B-C90B8F15811A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26999F57-B843-421A-BD7B-C90B8F15811A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26999F57-B843-421A-BD7B-C90B8F15811A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26999F57-B843-421A-BD7B-C90B8F15811A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8946505C-AC6F-43B6-AA0B-3974E7E2EB69}
 	EndGlobalSection
 EndGlobal

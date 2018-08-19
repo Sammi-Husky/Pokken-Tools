@@ -19,7 +19,7 @@ namespace ConsoleTestBed
                 Console.WriteLine("Usage:\n\tDRPDecrypt <drp file>");
                 return;
             }
-
+            Console.WriteLine($"Decrypting {args[0]}..");
             File.WriteAllBytes(args[0] + ".dec", Decrypt(args[0]));
         }
 
@@ -117,21 +117,16 @@ namespace ConsoleTestBed
         private int[] _data;
         public int GetInt()
         {
-            var last = _data[3];
-            var first = _data[0];
-            var third = _data[2];
-            var second = _data[1];
+            var XOR_INT = _data[0] ^ (_data[0] >> 0x13) ^
+                            _data[3] ^ (_data[3] << 11) ^
+                            ((_data[3] ^ (_data[3] << 11)) >> 8);
 
-            var XOR1 = last ^ (last << 11);
-            var XOR2 = first ^ (first >> 0x13);
-            var XOR3 = XOR1 ^ (XOR1 >> 8);
-            var FINAL_XOR = XOR2 ^ XOR3;
-
-            _data[1] = first;
-            _data[3] = third;
-            _data[2] = second;
-            _data[0] = FINAL_XOR;
-            return FINAL_XOR & 0x7FFFFFFF;
+            int tmp = _data[1];
+            _data[1] = _data[0];
+            _data[3] = _data[2];
+            _data[2] = tmp;
+            _data[0] = XOR_INT;
+            return XOR_INT & 0x7FFFFFFF;
         }
     }
 }

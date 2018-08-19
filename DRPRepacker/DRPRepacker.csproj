@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1C696A62-F209-4914-B640-259B3D0E20CA}</ProjectGuid>
+    <ProjectGuid>{26999F57-B843-421A-BD7B-C90B8F15811A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DRPExtractor</RootNamespace>
-    <AssemblyName>DRPExtractor</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>DRPRepacker</RootNamespace>
+    <AssemblyName>DRPRepacker</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,12 +49,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DRPFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Type Extensions\BinaryReaderExtension.cs" />
+    <Compile Include="Type Extensions\BigEndianTypes.cs" />
+    <Compile Include="Type Extensions\ByteExtension.cs" />
+    <Compile Include="Type Extensions\DirectoryExtension.cs" />
+    <Compile Include="Type Extensions\DoubleExtension.cs" />
+    <Compile Include="Type Extensions\EncodingExtension.cs" />
     <Compile Include="Type Extensions\Int16Extension.cs" />
     <Compile Include="Type Extensions\Int32Extension.cs" />
+    <Compile Include="Type Extensions\Int64Extension.cs" />
+    <Compile Include="Type Extensions\LinqExtension.cs" />
     <Compile Include="Type Extensions\RoundingExtensions.cs" />
+    <Compile Include="Type Extensions\ShortExtension.cs" />
+    <Compile Include="Type Extensions\StreamExtensions.cs" />
+    <Compile Include="Type Extensions\StringExtension.cs" />
+    <Compile Include="Type Extensions\UInt16Extension.cs" />
+    <Compile Include="Type Extensions\UInt32Extension.cs" />
+    <Compile Include="Type Extensions\Util.cs" />
+    <Compile Include="Type Extensions\VoidPtr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,11 +88,4 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

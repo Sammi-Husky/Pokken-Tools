@@ -14,7 +14,7 @@ namespace DRPExtractor
         {
             Console.WriteLine("=============================");
             Console.WriteLine("DRPExtractor v0.8");
-            Console.WriteLine("Copyright(c) 2016 Sammi Husky");
+            Console.WriteLine("Copyright(c) 2018 Sammi Husky");
             Console.WriteLine("Licensed under MIT License");
             Console.WriteLine("=============================\n");
             if (args.Length <= 0 || args.Length > 1)
@@ -27,41 +27,50 @@ namespace DRPExtractor
             {
                 using (var reader = new BinaryReader(stream))
                 {
-                    stream.Seek(0x60, SeekOrigin.Begin);
+                    stream.Seek(0x14, SeekOrigin.Begin);
                     Directory.CreateDirectory(args[0].Remove(args[0].IndexOf('.')));
-                    while (stream.Position != stream.Length)
+                    short unk1 = reader.ReadInt16().Reverse();
+                    short filecount = reader.ReadInt16().Reverse();
+                    stream.Seek(0x60, SeekOrigin.Begin);
+                    for (int i = 0; i < filecount; i++)
                     {
-                        var BaseAddr = stream.Position;
-                        var name = reader.ReadTerminatedString();
-                        stream.Position = BaseAddr + 0x44;
-                        var next = reader.ReadInt32().Reverse();
-                        stream.Position = BaseAddr + 0x4A;
-                        var count = reader.ReadInt16().Reverse();
-                        stream.Position = BaseAddr + 0x50;
-                        var sizes = new int[count];
-                        for (int i = 0; i < count; i++)
-                            sizes[i] = reader.ReadInt32().Reverse();
+                        long baseaddr = stream.Position;
 
-                        stream.Position = BaseAddr + 0x60;
-                        for (int i = 0; i < count; i++)
+                        string name = reader.ReadTerminatedString();
+                        stream.Seek(baseaddr + 0x40, SeekOrigin.Begin);
+
+                        short filetypeA = reader.ReadInt16().Reverse();
+                        short filetpyeB = reader.ReadInt16().Reverse();
+                        int ChunkSize = reader.ReadInt32().Reverse();
+                        short unk = reader.ReadInt16().Reverse();
+                        short subfiles = reader.ReadInt16().Reverse();
+
+                        stream.Seek(0x4, SeekOrigin.Current); // Padding
+
+                        int[] offsets = new int[4];
+                        int[] sizes = new int[4];
+
+                        for (int x = 0; x < 4; x++)
+                            sizes[x] = reader.ReadInt32().Reverse();
+
+                        int decompSize = reader.ReadInt32().Reverse();
+
+                        // Data starts here
+                        for (int x = 0; x < subfiles; x++)
                         {
-                            var newname = name;
-                            if (count > 1)
-                                newname += $"[{i}]";
+                            byte[] decompData = ZLibNet.ZLibCompressor.DeCompress(reader.ReadBytes(sizes[x] - 4)); // -4 to account for DecompLen Field in FileEntry
+                            if (decompData.Length != decompSize)
+                                throw new Exception("Decompressed length does not match length in header!");
 
-                            stream.Seek(0x06, SeekOrigin.Current);
-                            using (var originStream = new MemoryStream(reader.ReadBytes(sizes[i] - 6)))
+                            if (x != 0)
+                                name += $"_[{x}]";
+
+                            Console.WriteLine(name);
+                            using (var ostream = File.Create(Path.Combine(args[0].Remove(args[0].IndexOf('.')), name)))
                             {
-                                using (var destStream = File.Create(Path.Combine(args[0].Remove(args[0].IndexOf('.')), newname)))
-                                {
-                                    using (var decompStream = new DeflateStream(originStream, CompressionMode.Decompress))
-                                    {
-                                        decompStream.CopyTo(destStream);
-                                    }
-                                }
+                                ostream.Write(decompData, 0, decompSize);
                             }
                         }
-                        stream.Position = BaseAddr + next;
                     }
                 }
             }
