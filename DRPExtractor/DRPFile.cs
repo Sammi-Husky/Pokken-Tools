@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DRPRepacker
+namespace DRPExtractor
 {
     public class DRPFile
     {
@@ -70,7 +70,7 @@ namespace DRPRepacker
         {
             Dictionary<string, byte[]> ret = new Dictionary<string, byte[]>(FileCount);
             foreach (var entry in Entries)
-                ret.Concat(entry.Value.ExtractFiles());
+                ret = ret.Concat(entry.Value.ExtractFiles()).ToDictionary(x => x.Key, x => x.Value);
 
             return ret;
         }

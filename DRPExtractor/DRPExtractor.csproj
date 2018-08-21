@@ -49,12 +49,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DRPFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Type Extensions\BinaryReaderExtension.cs" />
+    <Compile Include="Type Extensions\BigEndianTypes.cs" />
+    <Compile Include="Type Extensions\ByteExtension.cs" />
+    <Compile Include="Type Extensions\DirectoryExtension.cs" />
+    <Compile Include="Type Extensions\DoubleExtension.cs" />
+    <Compile Include="Type Extensions\EncodingExtension.cs" />
     <Compile Include="Type Extensions\Int16Extension.cs" />
     <Compile Include="Type Extensions\Int32Extension.cs" />
+    <Compile Include="Type Extensions\Int64Extension.cs" />
+    <Compile Include="Type Extensions\LinqExtension.cs" />
     <Compile Include="Type Extensions\RoundingExtensions.cs" />
+    <Compile Include="Type Extensions\ShortExtension.cs" />
+    <Compile Include="Type Extensions\StreamExtensions.cs" />
+    <Compile Include="Type Extensions\StringExtension.cs" />
+    <Compile Include="Type Extensions\UInt16Extension.cs" />
+    <Compile Include="Type Extensions\UInt32Extension.cs" />
+    <Compile Include="Type Extensions\Util.cs" />
+    <Compile Include="Type Extensions\VoidPtr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
