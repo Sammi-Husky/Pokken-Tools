@@ -62,8 +62,13 @@ namespace DRPRepacker
             }
             DRPEntry entry = Entries[file];
             byte[] cdata = Util.Compress(data);
+
             entry.Files[partNum] = new DRPFileEntry(cdata, data.Length);
             return true;
+        }
+        public byte[] ExtractFile(string file)
+        {
+            throw new NotImplementedException();
         }
         public void Rebuild()
         {
@@ -75,7 +80,7 @@ namespace DRPRepacker
         public void WriteFile(string filepath)
         {
             Rebuild();
-            using(var stream = File.Open(filepath, FileMode.OpenOrCreate))
+            using(var stream = File.Open(filepath, FileMode.Create))
             {
                 using(var writer = new BinaryWriter(stream))
                 {
@@ -122,7 +127,7 @@ namespace DRPRepacker
         public short    Subfiles { get; set; }
         public int      Padding { get; set; }
 
-        public int[] FileEntrySizes = new int[4];
+        public int[] FileEndOffsets = new int[4];
         public DRPFileEntry[] Files { get; set; }
 
         public void Read(BinaryReader reader)
@@ -141,13 +146,13 @@ namespace DRPRepacker
 
             for (int i = 0; i < 4; i++)
             {
-                FileEntrySizes[i] = reader.ReadBint32();
+                FileEndOffsets[i] = reader.ReadBint32();
             }
 
             for (int i = 0; i < Subfiles; i++)
             {
                 int decompLen = reader.ReadBint32();
-                Files[i] = new DRPFileEntry(reader.ReadBytes(FileEntrySizes[i] - 4), decompLen); // -4 to account for decompLen field included in  FileEntry
+                Files[i] = new DRPFileEntry(reader.ReadBytes(FileEndOffsets[i] - 4), decompLen); // -4 to account for decompLen field included in  FileEntry
             }
         }
 
@@ -156,9 +161,24 @@ namespace DRPRepacker
             int totalSize = 0;
             for (int i = 0; i < Files.Length; i++)
             {
-                FileEntrySizes[i] = Files[i].SIZE;
-                totalSize += Files[i].SIZE;
+                int size = Files[i].SIZE;
+
+                // If entrysize is aligned to 0x10
+                // padd with zeros to align it
+                if (size % 0x10 > 0)
+                    size = size.RoundUp(0x10);
+
+                totalSize += size;
+                FileEndOffsets[i] = totalSize;
             }
+
+            // Set all other size fields to the last subfile's
+            // length if no other subfiles are present.
+            for (int i = Files.Length; i < FileEndOffsets.Length; i++)
+            {
+                FileEndOffsets[i] = FileEndOffsets[Files.Length-1];
+            }
+
             EntrySize = (totalSize += DRPEntry.HEADER_SIZE);
             Subfiles = (short)Files.Count(x => x.SIZE != 0);
         }
@@ -168,17 +188,21 @@ namespace DRPRepacker
             writer.Write(FiletypeA, Endianness.Big);
             writer.Write(FiletypeB, Endianness.Big);
             writer.Write(EntrySize, Endianness.Big);
-            writer.Write(Unk, Endianness.Big);
-            writer.Write(Subfiles, Endianness.Big);
+            writer.Write(Unk,       Endianness.Big);
+            writer.Write(Subfiles,  Endianness.Big);
             writer.Write(0x0);
 
-            for (int i = 0; i < FileEntrySizes.Length; i++)
-                writer.Write(FileEntrySizes[i], Endianness.Big);
+            for (int i = 0; i < FileEndOffsets.Length; i++)
+                writer.Write(FileEndOffsets[i], Endianness.Big);
 
             foreach(var file in Files)
             {
                 writer.Write(file.DecompSize, Endianness.Big);
-                writer.Write(file.Data);
+                writer.Write(file.FileData);
+
+                // Align data to 0x10
+                while (writer.BaseStream.Position % 0x10 > 0)
+                    writer.Write((byte)0);
             }
         }
     }
@@ -187,11 +211,11 @@ namespace DRPRepacker
         public DRPFileEntry(byte[] compData, int decompSize)
         {
             DecompSize = decompSize;
-            Data = compData;
+            FileData = compData;
         }
         public int DecompSize;
-        public byte[] Data;
+        public byte[] FileData;
 
-        public int SIZE { get { return Data.Length + 4; } }
+        public int SIZE { get { return FileData.Length + 4; } }
     }
 }
