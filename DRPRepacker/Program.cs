@@ -21,10 +21,7 @@ namespace DRPRepacker
                 var drpfile = new DRPFile(args[0]);
                 foreach(string file in Directory.EnumerateFiles(args[1]))
                 {
-                    if (drpfile.Entries.ContainsKey(Path.GetFileName(file)))
-                    {
-                        drpfile.ReplaceFile(Path.GetFileName(file), File.ReadAllBytes(file));
-                    }
+                    drpfile.ReplaceFile(Path.GetFileName(file), File.ReadAllBytes(file));
                 }
                 drpfile.WriteFile("repacked.drp");
             }

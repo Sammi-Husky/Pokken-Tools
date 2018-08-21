@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DRPRepacker
@@ -51,15 +52,16 @@ namespace DRPRepacker
         }
         public bool ReplaceFile(string file, byte[] data)
         {
-            if (!Entries.ContainsKey(file))
-                return false;
-
             int partNum = 0;
             if (file.Contains("["))
             {
-                partNum = int.Parse(file.Substring(file.IndexOf("["), file.IndexOf("]")));
+                partNum = int.Parse(Regex.Match(file, @"\[([^]]*)\]").Groups[1].Value);
                 file = file.Remove(file.IndexOf("["));
             }
+
+            if (!Entries.ContainsKey(file))
+                return false;
+
             DRPEntry entry = Entries[file];
             byte[] cdata = Util.Compress(data);
 
