@@ -19,8 +19,7 @@ namespace ConsoleTestBed
                 Console.WriteLine("Usage:\n\tDRPDecrypt <drp file>");
                 return;
             }
-            Console.WriteLine($"Decrypting {args[0]}..");
-            File.WriteAllBytes(Path.GetFileNameWithoutExtension(args[0]) + ".dec", Decrypt(args[0]));
+            File.WriteAllBytes(args[0], Decrypt(args[0]));
         }
 
         public static byte[] Decrypt(string path)

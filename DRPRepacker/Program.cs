@@ -26,7 +26,7 @@ namespace DRPRepacker
                         drpfile.ReplaceFile(Path.GetFileName(file), File.ReadAllBytes(file));
                     }
                 }
-                drpfile.WriteFile("repacked.drp.dec");
+                drpfile.WriteFile("repacked.drp");
             }
             else
             {

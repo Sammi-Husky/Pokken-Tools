@@ -58,7 +58,7 @@ namespace DRPRepacker
             if (file.Contains("["))
             {
                 partNum = int.Parse(file.Substring(file.IndexOf("["), file.IndexOf("]")));
-                file = file.Remove(file.IndexOf("_["));
+                file = file.Remove(file.IndexOf("["));
             }
             DRPEntry entry = Entries[file];
             byte[] cdata = Util.Compress(data);
